@@ -7,7 +7,9 @@
      - Tasks Module    : CRUD + render
    ══════════════════════════════════════════════════════════════════════════ */
 
-const API_BASE = '/api';
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? '/api'
+    : 'https://todo-2dno.onrender.com/api';
 
 /* ─────────────────────────────────────────────────────────────────────────────
    API MODULE
