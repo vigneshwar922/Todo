@@ -102,4 +102,59 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// ─── PUT /api/auth/profile ────────────────────────────────────────────────────
+const { verifyToken } = require('../middleware/auth');
+
+router.put('/profile', verifyToken, async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username && !password) {
+        return res.status(400).json({ error: 'Provide at least a new username or password.' });
+    }
+    if (username && (username.trim().length < 1 || username.trim().length > 30)) {
+        return res.status(400).json({ error: 'Username must be 1–30 characters.' });
+    }
+    if (password && password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters.' });
+    }
+
+    try {
+        // Check username uniqueness if changing
+        if (username) {
+            const existing = await db.query(
+                'SELECT id FROM users WHERE username = $1 AND id != $2',
+                [username.trim(), req.userId]
+            );
+            if (existing.rows.length > 0) {
+                return res.status(409).json({ error: 'Username is already taken.' });
+            }
+        }
+
+        let updateQuery, params;
+        if (username && password) {
+            const hash = bcrypt.hashSync(password, 12);
+            updateQuery = 'UPDATE users SET username=$1, password_hash=$2 WHERE id=$3 RETURNING id, username, email';
+            params = [username.trim(), hash, req.userId];
+        } else if (username) {
+            updateQuery = 'UPDATE users SET username=$1 WHERE id=$2 RETURNING id, username, email';
+            params = [username.trim(), req.userId];
+        } else {
+            const hash = bcrypt.hashSync(password, 12);
+            updateQuery = 'UPDATE users SET password_hash=$1 WHERE id=$2 RETURNING id, username, email';
+            params = [hash, req.userId];
+        }
+
+        const result = await db.query(updateQuery, params);
+        const updated = result.rows[0];
+
+        return res.status(200).json({
+            message: 'Profile updated successfully.',
+            user: { id: updated.id, username: updated.username, email: updated.email }
+        });
+    } catch (err) {
+        console.error('❌ Profile update error:', err);
+        return res.status(500).json({ error: `Profile update error: ${err.message}` });
+    }
+});
+
 module.exports = router;

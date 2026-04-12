@@ -3,23 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen Tasks — Full Stack Todo App</title>
-    <meta name="description" content="Zen Tasks: A beautiful, persistent, full-stack todo application with user authentication, priority tags, and server-side search.">
+    <title>ZenTasks — Your Daily Planner</title>
+    <meta name="description" content="ZenTasks: A beautiful, persistent, full-stack todo application with user authentication, priority tags, and date-based task planning.">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- Background decorations -->
-    <div class="bg-blur-circle circle-1"></div>
-    <div class="bg-blur-circle circle-2"></div>
-    <div class="bg-blur-circle circle-3"></div>
 
     <!-- ── Toast Container ────────────────────────────────────────── -->
     <div id="toast-container" aria-live="polite"></div>
@@ -32,155 +27,299 @@
     <!-- ══════════════════════════════════════════════════════════════
          AUTH SCREEN
     ══════════════════════════════════════════════════════════════ -->
-    <div id="auth-screen" class="auth-container hidden">
-        <div class="auth-card">
-            <div class="auth-logo">
-                <i class="fas fa-check-double"></i>
-                <h1>Zen Tasks</h1>
-                <p>Your tasks, everywhere you are.</p>
+    <div id="auth-screen" class="auth-container">
+        <div class="auth-wrapper">
+            <!-- Decorative side panel -->
+            <div class="auth-side">
+                <div class="auth-side-content">
+                    <div class="auth-brand-logo">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                    <h2>Stay organized,<br>stay ahead.</h2>
+                    <p>Plan your days, track your progress, and accomplish more with ZenTasks.</p>
+                    <div class="auth-features">
+                        <div class="auth-feature"><i class="fas fa-calendar-days"></i> Date-based task planning</div>
+                        <div class="auth-feature"><i class="fas fa-flag"></i> Priority &amp; tag support</div>
+                        <div class="auth-feature"><i class="fas fa-cloud"></i> Synced across devices</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Tabs -->
-            <div class="auth-tabs">
-                <button id="tab-login" class="auth-tab active" data-tab="login">Login</button>
-                <button id="tab-register" class="auth-tab" data-tab="register">Register</button>
+            <!-- Auth card -->
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <i class="fas fa-check-double"></i>
+                    <h1>ZenTasks</h1>
+                    <p>Your tasks, everywhere you are.</p>
+                </div>
+
+                <!-- Tabs -->
+                <div class="auth-tabs">
+                    <button id="tab-login" class="auth-tab active" data-tab="login">Sign In</button>
+                    <button id="tab-register" class="auth-tab" data-tab="register">Create Account</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="login-password" placeholder="Your password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" id="login-btn" class="auth-submit-btn">
+                        <span class="btn-text">Sign In</span>
+                        <span class="btn-spinner hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form hidden">
+                    <div class="form-group">
+                        <label for="reg-username"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="reg-username" placeholder="Choose a username" required autocomplete="username" maxlength="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="reg-email" placeholder="you@example.com" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="reg-password" placeholder="Min. 6 characters" required autocomplete="new-password" minlength="6">
+                    </div>
+                    <button type="submit" id="register-btn" class="auth-submit-btn">
+                        <span class="btn-text">Create Account</span>
+                        <span class="btn-spinner hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    </button>
+                </form>
             </div>
-
-            <!-- Login Form -->
-            <form id="login-form" class="auth-form">
-                <div class="form-group">
-                    <label for="login-email"><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email">
-                </div>
-                <div class="form-group">
-                    <label for="login-password"><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="login-password" placeholder="Your password" required autocomplete="current-password">
-                </div>
-                <button type="submit" id="login-btn" class="auth-submit-btn">
-                    <span class="btn-text">Login</span>
-                    <span class="btn-spinner hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                </button>
-            </form>
-
-            <!-- Register Form -->
-            <form id="register-form" class="auth-form hidden">
-                <div class="form-group">
-                    <label for="reg-username"><i class="fas fa-user"></i> Username</label>
-                    <input type="text" id="reg-username" placeholder="Choose a username" required autocomplete="username" maxlength="30">
-                </div>
-                <div class="form-group">
-                    <label for="reg-email"><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="reg-email" placeholder="you@example.com" required autocomplete="email">
-                </div>
-                <div class="form-group">
-                    <label for="reg-password"><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="reg-password" placeholder="Min. 6 characters" required autocomplete="new-password" minlength="6">
-                </div>
-                <button type="submit" id="register-btn" class="auth-submit-btn">
-                    <span class="btn-text">Create Account</span>
-                    <span class="btn-spinner hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                </button>
-            </form>
         </div>
     </div>
 
     <!-- ══════════════════════════════════════════════════════════════
          MAIN APP SCREEN
     ══════════════════════════════════════════════════════════════ -->
-    <main id="app-screen" class="app-container hidden">
+    <div id="app-screen" class="hidden">
 
-        <!-- Header -->
-        <header>
-            <div class="header-top">
-                <h1>Zen Tasks</h1>
-                <div class="user-badge" id="user-badge">
-                    <i class="fas fa-user-circle"></i>
+        <!-- ── Top Navigation Bar ──────────────────────────────────── -->
+        <nav class="top-nav" id="top-nav">
+            <!-- Left: Brand -->
+            <div class="nav-left">
+                <div class="nav-brand">
+                    <i class="fas fa-check-double nav-brand-icon"></i>
+                    <span class="nav-brand-name">ZenTasks</span>
+                </div>
+            </div>
+
+            <!-- Right: Progress + User -->
+            <div class="nav-right">
+                <div class="nav-progress-wrap">
+                    <div class="progress-ring-wrap" title="Today's completion">
+                        <svg class="progress-ring" width="36" height="36" viewBox="0 0 36 36">
+                            <defs>
+                                <linearGradient id="pgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#5b5ef4"/>
+                                    <stop offset="100%" stop-color="#9333ea"/>
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-ring-track" cx="18" cy="18" r="14" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+                            <circle class="progress-ring-bar" id="progress-ring-bar" cx="18" cy="18" r="14" fill="none" stroke="url(#pgGrad)" stroke-width="3"
+                                stroke-dasharray="87.96" stroke-dashoffset="87.96" stroke-linecap="round"/>
+                        </svg>
+                        <span class="progress-pct" id="progress-pct">0%</span>
+                    </div>
+                    <div class="nav-progress-text">
+                        <span class="progress-label">Today's Progress</span>
+                        <span class="progress-count" id="progress-count">0 / 0 tasks</span>
+                    </div>
+                </div>
+
+                <div class="nav-user-badge" id="nav-user-badge">
+                    <button class="user-avatar-btn" id="user-avatar-btn" aria-label="Open profile" title="View profile">
+                        <div class="user-avatar" id="user-avatar-initials">U</div>
+                    </button>
                     <span id="user-name-display">User</span>
-                    <button id="logout-btn" class="logout-btn" aria-label="Logout" title="Logout">
+                    <button id="logout-btn" class="nav-logout-btn" aria-label="Logout" title="Logout">
                         <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </div>
             </div>
+        </nav>
 
-            <div class="date-navigation">
-                <button type="button" id="prev-day" class="date-nav-btn" aria-label="Previous day">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="date-picker-container">
-                    <p id="date-display">Today</p>
-                    <input type="date" id="date-picker" class="date-picker-input">
-                </div>
-                <button type="button" id="next-day" class="date-nav-btn" aria-label="Next day">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- Add Task Form -->
-        <form id="todo-form">
-            <div class="input-group">
-                <input type="text" id="todo-input" placeholder="What needs to be done?" autocomplete="off" required maxlength="500">
-                <button type="submit" id="add-btn" aria-label="Add task">
-                    <i class="fas fa-plus btn-icon"></i>
-                    <span class="btn-spinner-sm hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                </button>
-            </div>
-            <div class="task-meta-inputs">
-                <select id="todo-priority" aria-label="Task priority">
-                    <option value="low">🟢 Low</option>
-                    <option value="medium">🟡 Medium</option>
-                    <option value="high">🔴 High</option>
-                </select>
-                <input type="text" id="todo-tag" placeholder="Tag (e.g. Work, Home)" autocomplete="off" maxlength="50">
-            </div>
-        </form>
-
-        <!-- Search & Sort Bar -->
-        <div class="search-sort-bar">
-            <div class="search-input-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="search-input" placeholder="Search tasks..." autocomplete="off">
-                <button id="clear-search-btn" class="clear-search hidden" aria-label="Clear search">
+        <!-- ── Profile Modal ───────────────────────────────────────── -->
+        <div id="profile-modal" class="profile-modal-overlay hidden" role="dialog" aria-modal="true" aria-label="User Profile">
+            <div class="profile-modal">
+                <!-- Close -->
+                <button class="profile-modal-close" id="profile-modal-close" aria-label="Close profile">
                     <i class="fas fa-times"></i>
                 </button>
+
+                <!-- Avatar section -->
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-wrap">
+                        <div class="profile-avatar-display" id="profile-avatar-display">U</div>
+                        <label class="profile-avatar-upload-btn" for="avatar-file-input" title="Upload photo">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <input type="file" id="avatar-file-input" accept="image/*" class="hidden">
+                    </div>
+                    <div class="profile-avatar-hint">Click <i class="fas fa-camera"></i> to change photo</div>
+                </div>
+
+                <!-- User Info -->
+                <div class="profile-info-section">
+                    <div class="profile-info-row">
+                        <i class="fas fa-user profile-info-icon"></i>
+                        <div>
+                            <div class="profile-info-label">Username</div>
+                            <div class="profile-info-value" id="profile-username-display">—</div>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <i class="fas fa-envelope profile-info-icon"></i>
+                        <div>
+                            <div class="profile-info-label">Email</div>
+                            <div class="profile-info-value" id="profile-email-display">—</div>
+                        </div>
+                    </div>
+                    <div class="profile-info-row">
+                        <i class="fas fa-calendar-check profile-info-icon"></i>
+                        <div>
+                            <div class="profile-info-label">Member Since</div>
+                            <div class="profile-info-value" id="profile-joined-display">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <!-- Edit Form -->
+                <div class="profile-edit-section">
+                    <h3 class="profile-edit-title"><i class="fas fa-pen"></i> Update Details</h3>
+                    <form id="profile-update-form">
+                        <div class="form-group">
+                            <label for="profile-new-username"><i class="fas fa-user"></i> New Username</label>
+                            <input type="text" id="profile-new-username" placeholder="Enter new username" maxlength="30" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-new-password"><i class="fas fa-lock"></i> New Password <span class="optional-label">(optional)</span></label>
+                            <input type="password" id="profile-new-password" placeholder="Leave blank to keep current" minlength="6" autocomplete="new-password">
+                        </div>
+                        <button type="submit" id="profile-update-btn" class="profile-save-btn">
+                            <span class="btn-text">Save Changes</span>
+                            <span class="btn-spinner hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Logout from modal -->
+                <button class="profile-logout-btn" id="profile-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
             </div>
-            <select id="sort-select" aria-label="Sort tasks">
-                <option value="date_desc">Newest First</option>
-                <option value="date_asc">Oldest First</option>
-            </select>
         </div>
 
-        <!-- Filters -->
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="active">Active</button>
-            <button class="filter-btn" data-filter="completed">Completed</button>
+        <!-- ── Date Strip ───────────────────────────────────────────── -->
+        <div class="date-strip-wrapper">
+            <button class="date-strip-scroll-btn" id="date-strip-prev" aria-label="Scroll dates left">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="date-strip" id="date-strip">
+                <!-- Date cards rendered by JS -->
+            </div>
+            <button class="date-strip-scroll-btn" id="date-strip-next" aria-label="Scroll dates right">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
 
-        <!-- Task List -->
-        <div class="list-container">
-            <!-- Loading skeleton -->
-            <div id="tasks-loading" class="tasks-loading hidden">
-                <div class="skeleton-item"></div>
-                <div class="skeleton-item"></div>
-                <div class="skeleton-item"></div>
+        <!-- ── Main Content ─────────────────────────────────────────── -->
+        <main class="app-main">
+
+            <!-- Selected date heading -->
+            <div class="selected-date-header">
+                <div>
+                    <h2 id="date-display">Today</h2>
+                    <span id="date-sub" class="date-sub"></span>
+                </div>
+                <div class="date-picker-container">
+                    <button class="pick-date-btn" id="pick-date-btn" aria-label="Open calendar">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Jump to date</span>
+                    </button>
+                    <input type="date" id="date-picker" class="date-picker-input" aria-label="Select date">
+                </div>
             </div>
 
-            <ul id="todo-list"></ul>
-
-            <div id="empty-state" class="empty-state hidden">
-                <div class="empty-icon"><i class="fas fa-check-double"></i></div>
-                <p>You're all caught up!</p>
-                <span>Enjoy your day.</span>
+            <!-- Add Task Form -->
+            <div class="add-task-card">
+                <form id="todo-form">
+                    <div class="input-group">
+                        <input type="text" id="todo-input" placeholder="What needs to be done today?" autocomplete="off" required maxlength="500">
+                        <button type="submit" id="add-btn" aria-label="Add task">
+                            <i class="fas fa-plus btn-icon"></i>
+                            <span class="btn-spinner-sm hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
+                        </button>
+                    </div>
+                    <div class="task-meta-inputs">
+                        <select id="todo-priority" aria-label="Task priority">
+                            <option value="low">🟢 Low</option>
+                            <option value="medium">🟡 Medium</option>
+                            <option value="high">🔴 High</option>
+                        </select>
+                        <input type="text" id="todo-tag" placeholder="Tag (e.g. Work, Home)" autocomplete="off" maxlength="50">
+                    </div>
+                </form>
             </div>
-        </div>
 
-        <!-- Footer -->
-        <footer>
-            <span id="tasks-count">0 items left</span>
-            <button id="clear-completed" class="hidden">Clear Completed</button>
-        </footer>
-    </main>
+            <!-- Search & Sort Bar -->
+            <div class="search-sort-bar">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Search tasks..." autocomplete="off">
+                    <button id="clear-search-btn" class="clear-search hidden" aria-label="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <select id="sort-select" aria-label="Sort tasks">
+                    <option value="date_desc">Newest First</option>
+                    <option value="date_asc">Oldest First</option>
+                </select>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+
+            <!-- Task List -->
+            <div class="list-container">
+                <!-- Loading skeleton -->
+                <div id="tasks-loading" class="tasks-loading hidden">
+                    <div class="skeleton-item"></div>
+                    <div class="skeleton-item"></div>
+                    <div class="skeleton-item"></div>
+                </div>
+
+                <ul id="todo-list"></ul>
+
+                <div id="empty-state" class="empty-state hidden">
+                    <div class="empty-icon"><i class="fas fa-check-double"></i></div>
+                    <p>No tasks for this day.</p>
+                    <span>Enjoy your time!</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer>
+                <span id="tasks-count">0 items left</span>
+                <button id="clear-completed" class="hidden">Clear Completed</button>
+            </footer>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>
