@@ -18,6 +18,7 @@ const initSchema = async () => {
         username      VARCHAR(100) NOT NULL UNIQUE,
         email         VARCHAR(255) NOT NULL UNIQUE,
         password_hash TEXT         NOT NULL,
+        profile_photo_url TEXT,
         created_at    TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
     `);
