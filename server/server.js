@@ -2,7 +2,8 @@ require('dotenv').config();
 
 const express = require('express');
 const path    = require('path');
-const cors = require('cors');
+const fs      = require('fs');
+const cors    = require('cors');
 
 const authRoutes = require('./routes/auth');
 const tasksRoutes = require('./routes/tasks');
@@ -12,9 +13,22 @@ const PORT = process.env.PORT || 3001;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
-// CORS — allow all origins in development
+// CORS — allow frontend URL in production, wildcard in development
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.FRONTEND_URL // Allow dynamic frontend URL from Render
+].filter(Boolean);
+
 app.use(cors({
-    origin: '*',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -28,10 +42,20 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve frontend static files
-const FRONTEND_PATH = path.join(__dirname, '..', 'frontend');
-app.use(express.static(FRONTEND_PATH));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Ensure uploads directory exists
+const uploadsPath = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsPath)) {
+    fs.mkdirSync(uploadsPath, { recursive: true });
+    console.log('📁 Created uploads directory');
+}
+
+// Serve static files
+const CLIENT_DIST_PATH = path.join(__dirname, '..', 'client', 'dist');
+const LEGACY_FRONTEND_PATH = path.join(__dirname, '..', 'legacy-frontend');
+
+app.use(express.static(CLIENT_DIST_PATH));
+app.use('/legacy', express.static(LEGACY_FRONTEND_PATH));
+app.use('/uploads', express.static(uploadsPath));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
