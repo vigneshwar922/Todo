@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { getTasks, createTask, updateTask, deleteTask } from '../api/tasks';
+import { getTasks, createTask, updateTask, deleteTask, bulkCreateTasks } from '../api/tasks';
 import { useAuth } from './AuthContext';
-import { format } from 'date-fns';
+import { format, addDays, parseISO } from 'date-fns';
 
 const TaskContext = createContext(null);
 
@@ -40,6 +40,20 @@ export const TaskProvider = ({ children }) => {
             return data.task;
         } catch (err) {
             console.error('Failed to add task:', err);
+            throw err;
+        }
+    };
+
+    const addTasksForPeriod = async (taskData, dates) => {
+        try {
+            const data = await bulkCreateTasks({ ...taskData, dates });
+            // If any of the new tasks are for the current selected date, refresh the list
+            if (dates.includes(selectedDate)) {
+                fetchTasks(); // Refresh to be safe and get correctly sorted list
+            }
+            return data.tasks;
+        } catch (err) {
+            console.error('Failed to add bulk tasks:', err);
             throw err;
         }
     };
@@ -89,6 +103,7 @@ export const TaskProvider = ({ children }) => {
             setSort,
             fetchTasks,
             addTask,
+            addTasksForPeriod,
             toggleTask,
             removeTask,
             clearCompleted

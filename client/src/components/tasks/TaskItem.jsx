@@ -41,12 +41,19 @@ const TaskItem = ({ task }) => {
             </label>
             
             <div className="todo-content">
-                <span className="todo-text">{task.title}</span>
-                {task.tag && (
-                    <div className="todo-tags">
-                        <span className="tag-pill"><i className="fas fa-tag"></i> {task.tag}</span>
+                <div className="todo-info">
+                    <span className="todo-text">{task.title}</span>
+                    <div className="todo-meta">
+                        <span className={`priority-indicator priority-${task.priority}`}>
+                            <i className="fas fa-flag"></i> {task.priority}
+                        </span>
+                        {task.tag && (
+                            <span className="tag-badge">
+                                <i className="fas fa-tag"></i> {task.tag}
+                            </span>
+                        )}
                     </div>
-                )}
+                </div>
             </div>
 
             <button 

@@ -52,6 +52,48 @@ router.get('/', async (req, res) => {
     }
 });
 
+// ─── POST /api/tasks/bulk ─────────────────────────────────────────────────────
+router.post('/bulk', async (req, res) => {
+    const { title, priority = 'low', tag = '', dates } = req.body;
+    const userId = req.userId;
+
+    if (!title || !title.trim()) {
+        return res.status(400).json({ error: 'Task title is required.' });
+    }
+    if (!dates || !Array.isArray(dates) || dates.length === 0) {
+        return res.status(400).json({ error: 'Array of dates is required.' });
+    }
+    if (dates.length > 60) {
+        return res.status(400).json({ error: 'Max 60 tasks can be created at once.' });
+    }
+
+    const safeTitle = title.trim().substring(0, 500);
+    const safeTag = (tag || '').trim().substring(0, 50);
+    const safePriority = ['low', 'medium', 'high'].includes(priority) ? priority : 'low';
+
+    try {
+        // Construct bulk insert values
+        const values = [];
+        const placeholders = [];
+        dates.forEach((date, i) => {
+            const base = i * 5;
+            placeholders.push(`($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5})`);
+            values.push(userId, safeTitle, safePriority, safeTag, date);
+        });
+
+        const query = `INSERT INTO tasks (user_id, title, priority, tag, date) VALUES ${placeholders.join(', ')} RETURNING *`;
+        const result = await db.query(query, values);
+
+        return res.status(201).json({
+            message: `${result.rows.length} tasks created.`,
+            tasks: result.rows
+        });
+    } catch (err) {
+        console.error('POST /tasks/bulk error:', err);
+        return res.status(500).json({ error: 'Failed to create bulk tasks.' });
+    }
+});
+
 // ─── POST /api/tasks ──────────────────────────────────────────────────────────
 router.post('/', async (req, res) => {
     const { title, priority = 'low', tag = '', date } = req.body;

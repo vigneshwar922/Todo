@@ -845,19 +845,21 @@ body {
     margin-top: 0.7rem;
 }
 
-#todo-priority, #todo-tag {
+#todo-priority, #todo-duration, #todo-tag, #todo-end-date {
     background: var(--bg-subtle);
     border: 1.5px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.65rem;
     color: var(--text-main);
     font-family: inherit;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     transition: all var(--ease);
 }
 
 #todo-priority { flex: 1; cursor: pointer; }
-#todo-tag      { flex: 2; }
+#todo-duration { flex: 1.25; cursor: pointer; }
+#todo-end-date { flex: 1.25; }
+#todo-tag      { flex: 1.5; }
 
 #todo-priority:focus, #todo-tag:focus {
     outline: none;
@@ -1062,6 +1064,15 @@ body {
     min-width: 0;
 }
 
+.todo-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    flex: 1;
+}
+
 /* Checkbox */
 .checkbox {
     width: 22px;
@@ -1103,9 +1114,9 @@ body {
 .todo-meta {
     display: flex;
     gap: 0.35rem;
-    margin-top: 0.25rem;
     align-items: center;
     flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 /* Priority badges */

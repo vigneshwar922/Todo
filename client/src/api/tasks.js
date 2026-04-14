@@ -16,6 +16,13 @@ export const createTask = async (taskData) => {
     return res.data;
 };
 
+export const bulkCreateTasks = async (bulkData) => {
+    const res = await axios.post(`${API_BASE}/tasks/bulk`, bulkData, {
+        headers: authHeaders()
+    });
+    return res.data;
+};
+
 export const updateTask = async (id, taskData) => {
     const res = await axios.put(`${API_BASE}/tasks/${id}`, taskData, {
         headers: authHeaders()

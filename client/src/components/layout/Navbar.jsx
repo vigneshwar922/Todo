@@ -7,14 +7,13 @@ import { BASE_URL } from '../../api/config';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
-    const { tasks } = useTasks();
+    const { tasks, selectedDate } = useTasks();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-    // Filter tasks for today to show in progress ring
-    const todayStr = format(new Date(), 'yyyy-MM-dd');
-    const todayTasks = tasks.filter(t => t.date === todayStr);
-    const total = todayTasks.length;
-    const completed = todayTasks.filter(t => t.is_completed).length;
+    // Filter tasks for the selected date to show in progress ring
+    const dateTasks = tasks.filter(t => t.date === selectedDate);
+    const total = dateTasks.length;
+    const completed = dateTasks.filter(t => t.is_completed).length;
     const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
 
     const RING_CIRCUMFERENCE = 2 * Math.PI * 14; // r=14 → 87.96
@@ -61,7 +60,7 @@ const Navbar = () => {
                             <span className="progress-pct">{pct}%</span>
                         </div>
                         <div className="nav-progress-text">
-                            <span className="progress-label">Today's Progress</span>
+                            <span className="progress-label">Daily Progress</span>
                             <span className="progress-count">{completed} / {total} tasks</span>
                         </div>
                     </div>
